@@ -1,0 +1,11 @@
+DataSet:
+	scrape images
+	preprocess images
+	Label images
+
+Model:
+	train model
+	test model
+	
+Deployment:
+	deploy model
