@@ -22,12 +22,12 @@ class Preprocess(object):
             except AssertionError as e:
                 print("{} {}".format(e, image_path))
 
-    def manualValidate(self,file_path):
+    def manualValidate(self, file_path):
         for image_path in listdir(file_path):
             image = cv2.imread(file_path + image_path)
             while 1:
                 cv2.imshow(image_path, image)
-                
+
                 k = cv2.waitKey(33)
                 if k == 27:
                     cv2.destroyAllWindows()
@@ -44,10 +44,12 @@ class Preprocess(object):
 
     def reorderFiles(self):
         image_count = 1
-        for image_path in sorted(listdir(self.base_save_path), key=lambda x : x[:3]):
-            self.saveFile("{}{}.png".format(self.base_save_path,str(image_count).zfill(3)), cv2.imread(self.file_path + image_path))
+        for image_path in sorted(listdir(self.base_save_path), key=lambda x: x[:3]):
+            self.saveFile("{}{}.png".format(self.base_save_path, str(
+                image_count).zfill(3)), cv2.imread(self.file_path + image_path))
             image_count += 1
-    def saveFile(self,save_path, image):
+
+    def saveFile(self, save_path, image):
         print(save_path)
         cv2.imwrite(save_path, image)
 

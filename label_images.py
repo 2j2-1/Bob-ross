@@ -19,28 +19,19 @@ class Label(object):
                 mydict = dict((rows[0], int(rows[1])) for rows in reader)
 
         for image_path in listdir(self.preprocessed_file_path):
-            try:
-                min_value = mydict[image_path]
-                if min_value != 60:
-                    continue
-            except:
-                print("Not found", image_path)
-                min_value = 60
-                with open('threshold.csv', 'a') as file:
-                    file.write("\n{},{}".format(image_path, min_value))
+            
+            min_value = mydict.get(image_path, 60)
+            
             image = cv2.imread(self.preprocessed_file_path + image_path)
 
             ret, thresh1 = cv2.threshold(
                 image, min_value, 255, cv2.THRESH_BINARY)
 
             while 1:
-                # cv2.imshow("Original", image)
-                # cv2.imshow("Labeled", thresh1)
+                cv2.imshow("Original", image)
+                cv2.imshow("Labeled", thresh1)
                 k = cv2.waitKey(33)
-                if k == 27:
-
-                    break
-                elif k == ord(' '):
+                if k == 27 or k == ord(' '):
                     break
                 elif k == ord('s'):
                     mydict[image_path] = min_value
@@ -48,21 +39,17 @@ class Label(object):
                     break
                 elif k == ord('a'):
                     min_value -= 1
-                    print(min_value)
                     ret, thresh1 = cv2.threshold(
                         image, min_value, 255, cv2.THRESH_BINARY)
                 elif k == ord('d'):
                     min_value += 1
                     ret, thresh1 = cv2.threshold(
                         image, min_value, 255, cv2.THRESH_BINARY)
-                    print(min_value)
-                self.saveFile(image_path, thresh1)
-                break
+
             if k == 27:
                 print(mydict)
                 with open('threshold.csv', 'w') as csvfile:
                     for data in mydict:
-                        print(data, mydict[data])
                         csvfile.write("{},{}\n".format(data, mydict[data]))
                 break
 
@@ -79,8 +66,7 @@ class Label(object):
             image = image.reshape((h, w, 3))
             quant = cv2.cvtColor(quant, cv2.COLOR_LAB2BGR)
             image = cv2.cvtColor(image, cv2.COLOR_LAB2BGR)
-            cv2.imshow("image", numpy.hstack([image, quant]))
-            cv2.waitKey(0)
+            self.saveFile(image_path, numpy.hstack([image, quant]))
 
     def saveFile(self, save_path, image):
         print(save_path)
